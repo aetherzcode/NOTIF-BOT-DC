@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Status</title>
+    <style>
+        .connected { color: green; }
+        .disconnected { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Discord Bot Status</h1>
+    <p>Status: <span id="status">Checking...</span></p>
+    <p>Details: <span id="details"></span></p>
+
+    <script>
+        function checkStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('status');
+                    const detailsElement = document.getElementById('details');
+                    
+                    if (data.error) {
+                        statusElement.textContent = 'Error';
+                        statusElement.className = 'disconnected';
+                        detailsElement.textContent = data.message || data.error;
+                    } else {
+                        statusElement.textContent = data.connected ? 'Connected' : 'Disconnected';
+                        statusElement.className = data.connected ? 'connected' : 'disconnected';
+                        detailsElement.textContent = `User: ${data.user}, Guilds: ${data.guilds}, Last Checked: ${data.lastChecked}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('status').textContent = 'Error checking status';
+                    document.getElementById('status').className = 'disconnected';
+                    document.getElementById('details').textContent = error.toString();
+                });
+        }
+
+        checkStatus();
+        setInterval(checkStatus, 5000);
+    </script>
+</body>
+</html>

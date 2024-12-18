@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/status", "dest": "/api/status.js" },
+    { "src": "/api/discord-interaction", "dest": "/api/discord-interaction.js" },
+    { "src": "/api/submit-form", "dest": "/api/submit-form.js" },
+    { "src": "/(.*)", "dest": "/public/$1" }
+  ]
+}
